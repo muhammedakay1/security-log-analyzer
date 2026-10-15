@@ -40,5 +40,18 @@ def count_failed_by_user(records):
                count_ip[user]=count_ip.get(user,0)+1
      return count_ip
 
-print(count_failed_by_ip(parse_file("logs/sample.log")))
-print(count_failed_by_user(parse_file("logs/sample.log")))
+
+def get_failed_times_by_ip(records):
+      times={}
+      for record in records:
+           if record["event"]=="failed" and record["ip"] is not None:
+                ip=record["ip"]
+                if ip not in times:
+                     times[ip]=[]
+                times[ip].append(record["timestamp"])
+      for ip in times:
+           times[ip].sort()
+
+      return times 
+
+print(get_failed_times_by_ip(parse_file("logs/sample.log")))
