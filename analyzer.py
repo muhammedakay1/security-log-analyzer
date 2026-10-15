@@ -25,4 +25,20 @@ def parse_file(path):
                     records.append(a)
             return records
         
-print(parse_file("logs/sample.log"))
+def count_failed_by_ip(records):
+     counts={}
+     for record in records:
+          if record["event"]=="failed" and record["ip"] is not None:
+               ip=record["ip"]
+               counts[ip]=counts.get(ip,0)+1
+     return counts
+def count_failed_by_user(records):
+     count_ip={}
+     for record in records:
+          if record["event"]=="failed":
+               user=record["user"]
+               count_ip[user]=count_ip.get(user,0)+1
+     return count_ip
+
+print(count_failed_by_ip(parse_file("logs/sample.log")))
+print(count_failed_by_user(parse_file("logs/sample.log")))
