@@ -54,4 +54,17 @@ def get_failed_times_by_ip(records):
 
       return times 
 
-print(get_failed_times_by_ip(parse_file("logs/sample.log")))
+
+
+def count_failed_by_time(failede_times,time,count):
+     for i in range(len(failede_times)-count+1):
+          differenz=failede_times[i+count-1]-failede_times[i]
+          if differenz.total_seconds()<=time:
+               return True
+     return False
+
+          
+
+failed_times = get_failed_times_by_ip(parse_file("logs/sample.log"))
+print(count_failed_by_time(failed_times["192.168.1.50"], 5, 3))
+print(count_failed_by_time(failed_times["10.0.0.15"], 5, 3))
