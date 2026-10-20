@@ -76,9 +76,21 @@ def find_suspicious(counts, threshold):
          if counts[i]>=threshold:
               result.append(i)
     return result
+
+def find_success_after_failures(records, seconds, attempts):
+     result=[]
+     for record in records:
+          if record["ip"]is  not None and record["event"]=="successful":
+               i=0
+               for record2 in records:
+                dif=(record["timestamp"] - record2["timestamp"]).total_seconds()
+                if record2["event"]=="failed" and record2["ip"]==record["ip"] and  0<=dif<=seconds:
+                     i+=1
+               if i >= attempts:
+                    result.append(record)
+     return result
+               
      
 
-
 records = parse_file("logs/sample.log")
-print(find_suspicious(count_failed_by_ip(records), 3))
-print(find_suspicious(count_failed_by_user(records), 3))
+print(find_success_after_failures(records, 60, 3))
