@@ -73,10 +73,11 @@ report = {
     "successful_after_failures": success_list
 }
 
-with open("args.output", "w") as f:
+with open(args.output, "w") as f:
     json.dump(report, f, indent=4)
 
 
 logging.info("Analysis completed")
 
-sys.exit(2)
+if attacker_ips or successful_after_failures:
+    sys.exit(2)
