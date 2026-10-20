@@ -4,11 +4,12 @@ import argparse
 import sys
 from analyzer import parse_file,count_failed_by_ip, count_failed_by_user, get_failed_times_by_ip, get_failed_hack_ip, find_suspicious, find_success_after_failures
 
-THRESHOLD=3
-parser=argparse.ArgumentParser(description="logs/sample.log")
 
-parser.add_argument("-f", required=True)
+parser=argparse.ArgumentParser(description="Analyze login logs for suspicious activity")
 
+parser.add_argument("-f", help="Path to the log file",required=True)
+parser.add_argument("--output", default="report.json", help="Path of the JSON report")
+parser.add_argument("--threshold",type=int,default=3)
 args=parser.parse_args()
 
 
@@ -41,8 +42,8 @@ failed_times = get_failed_times_by_ip(records)
 
 attacker_ips = get_failed_hack_ip(failed_times, 5, 3)
 
-suspicious_ips = find_suspicious(failed_by_ip, THRESHOLD)
-suspicious_users = find_suspicious(failed_by_user, THRESHOLD)
+suspicious_ips = find_suspicious(failed_by_ip, args.threshold)
+suspicious_users = find_suspicious(failed_by_user, args.threshold)
 
 successful_after_failures = find_success_after_failures(records, 60, 3)
 
@@ -72,8 +73,10 @@ report = {
     "successful_after_failures": success_list
 }
 
-with open("report.json", "w") as f:
+with open("args.output", "w") as f:
     json.dump(report, f, indent=4)
 
 
 logging.info("Analysis completed")
+
+sys.exit(2)
