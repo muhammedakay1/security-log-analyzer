@@ -92,5 +92,3 @@ def find_success_after_failures(records, seconds, attempts):
                
      
 
-records = parse_file("logs/sample.log")
-print(find_success_after_failures(records, 60, 3))
