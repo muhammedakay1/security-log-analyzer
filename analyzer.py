@@ -70,6 +70,15 @@ def get_failed_hack_ip(times,time,count):
                attacker_ıps.append(i)
      return attacker_ıps
           
+def find_suspicious(counts, threshold):
+    result = []
+    for i in counts:
+         if counts[i]>=threshold:
+              result.append(i)
+    return result
+     
 
-failed_times = get_failed_times_by_ip(parse_file("logs/sample.log"))
-print(get_failed_hack_ip(failed_times, 5, 3))
+
+records = parse_file("logs/sample.log")
+print(find_suspicious(count_failed_by_ip(records), 3))
+print(find_suspicious(count_failed_by_user(records), 3))
