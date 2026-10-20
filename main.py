@@ -2,7 +2,7 @@ import json
 import logging
 import argparse
 import sys
-from analyzer import parse_file
+from analyzer import parse_file,count_failed_by_ip, count_failed_by_user, get_failed_times_by_ip, get_failed_hack_ip, find_suspicious, find_success_after_failures
 
 THRESHOLD=3
 parser=argparse.ArgumentParser(description="logs/sample.log")
@@ -27,5 +27,31 @@ except FileNotFoundError:
     print(f"ERROR : File named '{args.f}' not found !")
     logging.warning(f" File not found {args.f}")
     sys.exit(1)
+
+if not records:
+    print("No valid log lines found")
+    logging.warning("No valid log lines found")
+    sys.exit(1)
+
+
+failed_by_ip = count_failed_by_ip(records)
+failed_by_user = count_failed_by_user(records)
+
+failed_times = get_failed_times_by_ip(records)
+
+attacker_ips = get_failed_hack_ip(failed_times, 5, 3)
+
+suspicious_ips = find_suspicious(failed_by_ip, THRESHOLD)
+suspicious_users = find_suspicious(failed_by_user, THRESHOLD)
+
+successful_after_failures = find_success_after_failures(records, 60, 3)
+
+print("Brute-force IPs:", attacker_ips)
+print("Suspicious IPs:", suspicious_ips)
+print("Suspicious users:", suspicious_users)
+print("Successful logins after failures:")
+
+for record in successful_after_failures:
+    print("User:", record["user"], "| IP:", record["ip"])
 
 logging.info("Analysis completed")
