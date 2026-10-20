@@ -54,4 +54,26 @@ print("Successful logins after failures:")
 for record in successful_after_failures:
     print("User:", record["user"], "| IP:", record["ip"])
 
+success_list = []
+for record in successful_after_failures:
+    item = {
+        "user": record["user"],
+        "ip": record["ip"],
+        "timestamp": str(record["timestamp"])
+    }
+    success_list.append(item)
+
+report = {
+    "attacker_ips": attacker_ips,
+    "suspicious_ips": suspicious_ips,
+    "suspicious_users": suspicious_users,
+    "failed_by_ip": failed_by_ip,
+    "failed_by_user": failed_by_user,
+    "successful_after_failures": success_list
+}
+
+with open("report.json", "w") as f:
+    json.dump(report, f, indent=4)
+
+
 logging.info("Analysis completed")
