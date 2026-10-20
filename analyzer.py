@@ -63,8 +63,13 @@ def count_failed_by_time(failede_times,time,count):
                return True
      return False
 
+def get_failed_hack_ip(times,time,count):
+     attacker_ıps=[]
+     for i in times:
+          if count_failed_by_time(times[i],time,count)==True:
+               attacker_ıps.append(i)
+     return attacker_ıps
           
 
 failed_times = get_failed_times_by_ip(parse_file("logs/sample.log"))
-print(count_failed_by_time(failed_times["192.168.1.50"], 5, 3))
-print(count_failed_by_time(failed_times["10.0.0.15"], 5, 3))
+print(get_failed_hack_ip(failed_times, 5, 3))
