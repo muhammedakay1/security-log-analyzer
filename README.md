@@ -14,7 +14,7 @@ A small Python command-line tool that analyzes login logs and flags suspicious a
 ## Requirements
 
 - Python 3
-- No external libraries
+- No external libraries (pytest is only needed to run the tests)
 
 ## Usage
 
@@ -67,18 +67,27 @@ User: admin | IP: 192.168.1.50
 
 The results are warning signs, not proof of an attack. A user may simply have forgotten a password or mistyped it. An analyst should check the flagged IP and, if needed, contact the account owner to confirm the activity (for example: "We detected a suspicious login on your account. Was this you?"). If the owner does not recognize it, the password should be reset and active sessions closed.
 
+## Running tests
+
+```bash
+pip3 install pytest
+python3 -m pytest
+```
+
 ## Project structure
 
 - `main.py`: command-line entry point, prints results and writes the report
 - `analyzer.py`: parsing and detection functions
 - `logs/sample.log`: sample log file
+- `tests/test_analyzer.py`: automated tests (pytest)
 
 ## Limitations
 
 - Supports only the log format shown above
 - The brute-force window (5 seconds, 3 attempts) and the success-after-failures window (60 seconds, 3 attempts) are fixed in the code; `--threshold` only affects suspicious IPs and users
 - Failed logins without an IP are counted per user but not per IP
-- No automated tests yet
+- IP addresses are not validated (for example `999.999.1.1` is accepted)
+- Exactly one space is expected between `user=...` and `ip=...`
 
 ## Disclaimer
 
