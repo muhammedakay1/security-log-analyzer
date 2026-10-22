@@ -1,4 +1,5 @@
 # Security Log Analyzer
+![Tests](https://github.com/muhammedakay1/security-log-analyzer/actions/workflows/tests.yml/badge.svg)
 
 A small Python command-line tool that analyzes login logs and flags suspicious activity such as brute-force attempts and successful logins that follow repeated failures.
 
